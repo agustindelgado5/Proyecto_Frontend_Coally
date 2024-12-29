@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 
 const TaskForm = ({ onSubmit, initialData = {} }) => {
   const [title, setTitle] = useState(initialData.title || '');
-  const [description, setDescription] = useState(initialData.description || '');
+  const [status, setStatus] = useState(initialData.status || false);
+  const [createdAt, setCreatedAt] = useState(initialData.createdAt || new Date().toISOString());
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -10,9 +11,10 @@ const TaskForm = ({ onSubmit, initialData = {} }) => {
       alert('El título es obligatorio');
       return;
     }
-    onSubmit({ title, description });
+    onSubmit({ title, status, createdAt });
     setTitle('');
-    setDescription('');
+    setStatus(false);
+    setCreatedAt(new Date().toISOString());
   };
 
   return (
@@ -31,15 +33,29 @@ const TaskForm = ({ onSubmit, initialData = {} }) => {
         />
       </div>
       <div style={{ marginBottom: '1rem' }}>
-        <label htmlFor="description" style={{ display: 'block', marginBottom: '.5rem' }}>
-          Descripción:
+        <label htmlFor="status" style={{ display: 'block', marginBottom: '.5rem' }}>
+          Estado:
         </label>
-        <textarea
-          id="description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+        <select
+          id="status"
+          value={status}
+          onChange={(e) => setStatus(e.target.value === 'true')}
           style={{ width: '100%', padding: '.5rem' }}
-          placeholder="Escribe una descripción (opcional)"
+        >
+          <option value="false">Pendiente</option>
+          <option value="true">Completada</option>
+        </select>
+      </div>
+      <div style={{ marginBottom: '1rem' }}>
+        <label htmlFor="createdAt" style={{ display: 'block', marginBottom: '.5rem' }}>
+          Fecha de creación:
+        </label>
+        <input
+          type="text"
+          id="createdAt"
+          value={new Date(createdAt).toLocaleDateString()}
+          disabled
+          style={{ width: '100%', padding: '.5rem', backgroundColor: '#f0f0f0' }}
         />
       </div>
       <button type="submit" style={{ padding: '.5rem 1rem', backgroundColor: 'blue', color: '#fff' }}>
